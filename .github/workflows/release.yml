@@ -22,6 +22,6 @@ jobs:
     - name: Publish EFCore.FluentQuery
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
-          PROJECT_FILE_PATH: EFCore.FluentQuery/EFCore.FluentQuery.csproj
+          PROJECT_FILE_PATH: InstantQuery/InstantQuery.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
