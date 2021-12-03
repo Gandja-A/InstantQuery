@@ -3,7 +3,7 @@ name: Publish Packages
 on:
   push:
     tags:
-    - 'v*.*.*'
+    - 'v[0-9]+.[0-9]+.[0-9]**'
 
 jobs:
   build:
@@ -22,6 +22,6 @@ jobs:
     - name: Publish EFCore.FluentQuery
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
-          PROJECT_FILE_PATH: InstantQuery/InstantQuery.csproj
+          PROJECT_FILE_PATH: src/InstantQuery/InstantQuery.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
