@@ -3,7 +3,7 @@ name: Publish Packages
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]**'
+    - 'v[0-9]+.[0-9]+.[0-9]-rc'
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Publish EFCore.FluentQuery
+    - name: Publish InstantQuery
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
           PROJECT_FILE_PATH: src/InstantQuery/InstantQuery.csproj
