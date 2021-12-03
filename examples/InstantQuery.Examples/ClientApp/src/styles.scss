@@ -1,0 +1,145 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/material.theme.css";
+
+
+mat-card.card-container {
+  padding-top: 25px !important;
+  padding-bottom: 23px !important;
+  padding-left: 25px;
+  padding-right: 25px;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(6,9,20,0.05), 0 4px 12px 0 rgba(6,9,20,0.05) !important;
+}
+
+
+mat-card.table-card-container {
+  margin: 30px;
+  padding: 16px 0 10px 0  !important;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(6,9,20,0.05), 0 4px 12px 0 rgba(6,9,20,0.05) !important;
+}
+
+
+.tool-bar-table-row {
+  padding: 0 26px 16px 26px;
+}
+
+
+
+.rounded-form-filed {
+  .mat-form-field-outline-start {
+    border-radius: 20px 0 0 20px !important;
+    min-width: 20px !important;
+  }
+
+  .mat-form-field-outline-end {
+    border-radius: 0 20px 20px 0 !important;
+  }
+  .mat-form-field-outline {
+    background-color: white;
+    border-radius: 20px;
+  }
+
+  mat-form-field.mat-form-field {
+    font-size: 13px;
+  }
+  .mat-input-element {
+    font-size: 13px;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-flex {
+    height: 44px;
+  }
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0.6em 0 1em 0.6em;
+    // font-size: 13px;
+  }
+  .mat-form-field-wrapper {
+    padding: 0;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    // color: rgba(0, 0, 0, 0.87);
+    border: none;
+    color: rgba(0, 0, 0, 0.06);
+    // box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.06);
+  }
+}
+
+tr.mat-footer-row {
+  height: 55px !important;
+}
+.mat-footer-cell {
+  color: white;
+}
+
+tr.mat-header-row {
+  height: 45px !important;
+
+}tr.mat-row  {
+  height: 60px !important;
+}
+
+.table-not-found {
+  max-width: 360px;
+  text-align: center;
+  padding-top: 50px;
+}
+
+.table-main-container {
+  position: relative;
+  min-height: 100px;
+  max-height: 655px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-not-found-without-paginator {
+  max-width: 360px;
+  text-align: center;
+}
+
+.not-found-container {
+  position: relative;
+}
+
+.table-title {
+  color: black;
+  font-family: Rubik;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.col-width-50 {
+  width: 50px !important;
+  max-width: 50px !important;
+}
+
+.col-width-70 {
+  width: 70px !important;
+  max-width: 70px !important;
+}
+
+.editing-cell-height
+{
+  .mat-cell{
+    height: 114px;
+  }
+}

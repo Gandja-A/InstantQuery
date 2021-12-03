@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <NeutralLanguage></NeutralLanguage>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Authors>Alexander Handzha</Authors>
+    <PackageId>InstantQuery</PackageId>
+    <RepositoryType>Git</RepositoryType>
+    <Version>1.0.0-rc</Version>
+    <Copyright>Copyright (c) Alexander Handzha 2021</Copyright>
+    <Description>Library for rapid application development. Simplifies filtering, ordering, and pagination by the attribute annotation way.</Description>
+    <PackageTags>Boilerplate, EFCore, EntityFramework, EF, Linq, Extensions, Query, FluentQuery, QuickQuery, Pagination, Filtering, Ordering</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageProjectUrl>https://github.com/Gandja-A/InstantQuery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Gandja-A/InstantQuery</RepositoryUrl>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>none</AnalysisLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+
+</Project>
