@@ -19,7 +19,7 @@ if(filter.StartDate != null && filter.EndDate == null)
 
 ### Installing InstantQuery
 
-    Install-Package InstantQuery -Version 1.0.0-rc
+    Install-Package InstantQuery
 
 Usage
 -----
