@@ -1,8 +1,8 @@
 # Instant Query
 
-The tiny library intended to simplify writing LINQ queries based on attributes annotation to the database. 
+Instant Query is a small library designed to simplify the process of writing LINQ queries by using attribute annotations, particularly when working with Entity Framework Core and LINQ. Its main goal is to reduce the repetitive and tedious coding aspects often encountered during query construction.
 
-The primary purpose is to reduce repeatable and annoying code like below during writing queries using Entity Framework Core and LINQ.
+Consider the following typical code snippet that Instant Query aims to streamline:
 
 ```csharp
 if(filter.StartDate != null && filter.EndDate != null)
@@ -15,17 +15,25 @@ if(filter.StartDate != null && filter.EndDate == null)
     query = query.Where(o => o.CreatedAt.Date >= filter.StartDate);
 }
 
+if(filter.StartDate == null && filter.EndDate != null)
+{
+    query = query.Where(o => o.CreatedAt.Date <= filter.EndDate);
+}
 ```
 
 ### Installing InstantQuery
 
+To install InstantQuery, use the following command:
+
     Install-Package InstantQuery
 
-Usage
------
-To implement filtering, ordering, and pagination, you should decorate your filter DTO with query attributes and implement two interfaces.
+## Usage
 
-### The Example of filter model
+InstantQuery facilitates the implementation of filtering, ordering, and pagination in your applications. To leverage these features, decorate your filter DTO (Data Transfer Object) with query attributes and implement the `IPaging` and `ISortable` interfaces.
+
+### Example of a Filter Model
+
+Here is an example of how a filter model might be defined using InstantQuery:
 
 ```csharp
 public class OrderFilterDto : IPaging, ISortable
@@ -52,10 +60,11 @@ public class OrderFilterDto : IPaging, ISortable
 
     public string SortDir { get; set; }
 }
-
 ```
-And then, you can use the ToListResult extension method.
 
+### Using the Extension Method
+
+The library provides an extension method, `ToListResult`, to apply these annotations in your queries:
 
 ```csharp
 [HttpGet]
@@ -71,9 +80,9 @@ public async Task<ActionResult<ListResultDto<OrderDetailsDto>>> GetOrders([FromQ
 }
 ```
 
-That's It.
+## Vanilla LINQ Implementation
 
-Here is the equivalent vanilla LINQ implementation without AutoMapper ProjectTo queryable extension method.
+The equivalent implementation using vanilla LINQ, without the AutoMapper's ProjectTo extension method, is as follows:
 
 ```csharp
 var columnsMap = new Dictionary<string, Expression<Func<OrderDetailsDto, object>>>
@@ -153,14 +162,16 @@ if(filter.Page <= 0)
 var orders = await query.Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
 
 var result = new ListResultDto<OrderDetailsDto> { Data = orders, TotalCount = totalCount };
-
 ```
-This library does not provide an asynchronous method ToListResultAsync out of the box. You should implement it by yourself. 
+
+### Note
+InstantQuery does not provide the method `ToListResultAsync` by default. You need to implement it as shown below:
+
 ```csharp
 public static class QueryableExtensions
 {
-    public static async Task<ListResult<T>> ToListResultAsync<T, TFilter>(this <T> query, TFilter queryParams)
-    where TFilter : IPagination, ISortable
+    public static async Task<ListResult<T>> ToListResultAsync<T, TFilter>(this IQueryable<T> query, TFilter queryParams)
+    where TFilter : IPaging, ISortable
     {
         var filteredAndSortedQuery = query.FilterAndSort(queryParams);
 
@@ -170,101 +181,54 @@ public static class QueryableExtensions
 
         return new ListResult<T> { Data = data, TotalCount = totalCount };
     }
-
 }
-
 ```
 
-For more details, look at the demo project. The project gives an overview of using this library with EF Core 6 and an Angular application. For simplicity, the project is built based on the "ASP .NET Core with Angular" Visual Studio template.
+For more detailed examples
 
-## API
+ and usage scenarios, refer to the demo project. This project provides a comprehensive guide on how to use InstantQuery with EF Core 6 and an Angular application, structured around the "ASP .NET Core with Angular" Visual Studio template.
 
-### Attributes parameters
-| Parameter 	| Type 	| Description 	|
-|---	|---	|---	|
-| <b>For</b> 	| `string` optional 	| Uses for mapping filter property to the projections entity field. If not specified, the filter property name will use for mapping. 	|
-| <b>CombineType</b> 	| `enum CombineType` <br> <br><i>Values:</i> CombineType.And, CombineType.Or<br><br><i>Default value:</i> CombineType.And 	| Defines how expressions are combined. 	|
-| <b>SearchAs</b> 	| `enum SearchAs` <br> <br><i>Values:</i> SearchAs.StartsWith, SearchAs.Contains <br> <br><i>Default value:</i> SearchAs.StartsWith 	| Defines which string method uses to generate the search expression. 	|                                                                                 |
+## API Documentation
+
+### Attribute Parameters
+
+| Parameter       | Type                            | Description |
+|-----------------|---------------------------------|-------------|
+| `For`           | `string` (optional)             | Maps filter property to the entity field. If not set, the filter property name is used. |
+| `CombineType`   | `enum CombineType`              | Specifies how expressions are combined. Default: `CombineType.And` |
+| `SearchAs`      | `enum SearchAs`                 | Determines the string method for search expression. Default: `SearchAs.StartsWith` |
+
 ### Attributes
 
-| Attribute 	| Equivalent LINQ expression 	|
-|---	|---	|
-| Equal 	| query.Where(e => e.EntityField == filter.Value); 	|
-| NotEqual 	| query.Where(e => e.EntityField != filter.Value); 	|
-| GreaterThan 	| query.Where(e => e.EntityField > filter.Value); 	|
-| GreaterThanOrEqua 	| query.Where(e => e.EntityField >= filter.Value); 	|
-| LessThan 	| query.Where(e => e.EntityField < filter.Value); 	|
-| LessThanOrEqual 	| query.Where(e => e.EntityField <= filter.Value); 	|
-| Contains 	| query.Where(e => filter.Values.Contains(e.EntityField)); 	|
-| SearchBy 	| query = query.Where(q => q.EntityField.ToLower().StartsWith(filter.SearchTerm)); 	|
-| CompareIgnoreTime 	| query = query.Where(q => q.EntityDateTimeField.Date ( any of comparison operator) filter.DateTimeValue)); 	|
+| Attribute           | Equivalent LINQ Expression |
+|---------------------|----------------------------|
+| `Equal`             | `query.Where(e => e.EntityField == filter.Value);` |
+| `NotEqual`          | `query.Where(e => e.EntityField != filter.Value);` |
+| `GreaterThan`       | `query.Where(e => e.EntityField > filter.Value);` |
+| `GreaterThanOrEqual`| `query.Where(e => e.EntityField >= filter.Value);` |
+| `LessThan`          | `query.Where(e => e.EntityField < filter.Value);` |
+| `LessThanOrEqual`   | `query.Where(e => e.EntityField <= filter.Value);` |
+| `Contains`          | `query.Where(e => filter.Values.Contains(e.EntityField));` |
+| `SearchBy`          | `query.Where(q => q.EntityField.ToLower().StartsWith(filter.SearchTerm.ToLower()));` |
+| `CompareIgnoreTime` | `query.Where(q => q.EntityDateTimeField.Date (any comparison operator) filter.DateTimeValue));` |
+
 ### Queryable Extensions
 
-| Methode 	| Descriptions 	|
-|---	|---	|
-| Filter 	| Generates filtering expression based on the attributes annotation. 	|
-| FilterAndSort 	| Generates filtering and sorting expression based on the attribute annotation. 	|
-| TakePage 	| Applies pagination based on the IPagination interface implementation. Equivalent to LINQ query.Skip((pagination.Page - 1) * pagination.PageSize).Take(pagination.PageSize); 	|
-| Sort 	| Generates sorting expression based on the ISortable interface implementation. 	|
-| OrderBy 	| Sorts the elements based on the string input parameters. 	|
-| ToListResult 	| Applies the Filtering, Sorting, and pagination. Evaluates a query, and returns the result as a ``` ListResult<T> ``` object. 	|
+| Method            | Description |
+|-------------------|-------------|
+| `Filter`          | Generates filter expressions based on annotations. |
+| `FilterAndSort`   | Combines filtering and sorting expressions. |
+| `TakePage`        | Applies pagination as per `IPagination`. |
+| `Sort`            | Creates sort expressions based on `ISortable`. |
+| `OrderBy`         | Sorts elements based on string parameters. |
+| `ToListResult`    | Applies filtering, sorting, pagination, and returns `ListResult<T>`. |
 
 ### Interfaces
 
-<b>ISortable</b>
+**`ISortable`**
+- `SortBy`: Target entity properties as a comma-separated string.
+- `SortDir`: Sorting direction ("asc", "desc", or combinations).
 
-``` csharp
-public interface ISortable
-{
-    string SortBy { get; set; }
-
-    string SortDir { get; set; }
-}
-```
-<b>Parameters</b> 
-* `SortBy` - represents the target entity property/properties as a string with "," as a delimiter.
-* `SortDir` - represents the direction of sorting as a string with "," as a delimiter. The parameter can be "asc" or "desc"  or a combination of them.
-
-<b>Examples </b> <br>
-SortBy = "entityField1, entityField2"<br>
-SortDir ="asc, desc"
-
-This configuration translates to the expression that is equivalent to the LINQ. 
-
-```csharp
-query = query.OrderBy(e=>e.EntityField1).ThenByDescending(e=>e.EntityField2)
-
-```
-SortBy = "entityField1, entityField2"<br>
-SortDir ="asc"
-
-```csharp
-query = query.OrderBy(e=>e.EntityField1).ThenBy(e=>e.EntityField2)
-```
-
-```csharp
-query = query.OrderBy(e=>e.EntityField1).ThenByDescending(e=>e.EntityField2)
-
-```
-SortBy = "entityField1"<br>
-SortDir ="asc"
-
-```csharp
-query = query.OrderBy(e=>e.EntityField1)
-```
-
-<b>IPaging</b>
-
-``` csharp
-public interface IPaging
-{
-    int Page { get; set; }
-
-    int PageSize { get; set; }
-}
-
-```
-
-<b>Parameters</b> 
-* `Page` - number of the requested page. Must be greater than zero. 
-* `PageSize` - number of the retrieving records. Must be greater than zero.
+**`IPaging`**
+- `Page`: Requested page number, must be > 0.
+- `PageSize`: Number of records to retrieve, must be > 0.
